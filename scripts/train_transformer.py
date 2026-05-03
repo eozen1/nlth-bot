@@ -64,6 +64,20 @@ def main():
     parser.add_argument("--num_layers", type=int, default=2)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument("--loss_type", type=str, default="ce", choices=["ce", "focal"])
+    parser.add_argument("--focal_gamma", type=float, default=2.0)
+    parser.add_argument(
+        "--focal_alpha",
+        type=float,
+        nargs=3,
+        default=None,
+        metavar=("ALPHA_FOLD", "ALPHA_CALL", "ALPHA_RAISE"),
+    )
+    parser.add_argument(
+        "--history_only",
+        action="store_true",
+        help="Ignore flat context features and use only action history sequence.",
+    )
     parser.add_argument("--out_metrics", type=str, default="results/metrics/h1_transformer_vs_lstm.json")
     parser.add_argument("--out_history", type=str, default="results/metrics/h1_transformer_training_history.json")
     parser.add_argument("--out_ckpt", type=str, default="checkpoints/h1_transformer.pt")
@@ -91,6 +105,10 @@ def main():
         num_layers=args.num_layers,
         dropout=args.dropout,
         patience=args.patience,
+        loss_type=args.loss_type,
+        focal_gamma=args.focal_gamma,
+        focal_alpha=args.focal_alpha,
+        include_flat_features=not args.history_only,
     )
 
     y_pred_val_t = predict_transformer(transformer_model, val_ds, batch_size=args.batch_size)
@@ -102,6 +120,21 @@ def main():
     y_pred_test_l = predict_lstm(lstm_model, test_ds)
 
     results = {
+        "config": {
+            "epochs": args.epochs,
+            "batch_size": args.batch_size,
+            "lr": args.lr,
+            "weight_decay": args.weight_decay,
+            "d_model": args.d_model,
+            "num_heads": args.num_heads,
+            "num_layers": args.num_layers,
+            "dropout": args.dropout,
+            "patience": args.patience,
+            "loss_type": args.loss_type,
+            "focal_gamma": args.focal_gamma,
+            "focal_alpha": args.focal_alpha,
+            "history_only": args.history_only,
+        },
         "Transformer": {
             "val": compute_metrics(y_val, y_pred_val_t),
             "test": compute_metrics(y_test, y_pred_test_t),

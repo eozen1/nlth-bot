@@ -20,11 +20,18 @@ class CausalTransformerClassifier(nn.Module):
         dropout: float = 0.1,
         max_seq_len: int = 64,
         num_classes: int = 3,
+        include_flat_features: bool = True,
     ):
         super().__init__()
         self.max_seq_len = max_seq_len
+        self.include_flat_features = include_flat_features
         self.seq_proj = nn.Linear(seq_input_dim, d_model)
-        self.flat_proj = nn.Linear(flat_input_dim, d_model)
+        if include_flat_features:
+            self.flat_proj = nn.Linear(flat_input_dim, d_model)
+            head_input_dim = 2 * d_model
+        else:
+            self.flat_proj = None
+            head_input_dim = d_model
         self.pos_embed = nn.Parameter(torch.zeros(1, max_seq_len, d_model))
 
         encoder_layer = nn.TransformerEncoderLayer(
@@ -37,8 +44,8 @@ class CausalTransformerClassifier(nn.Module):
         )
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         self.head = nn.Sequential(
-            nn.LayerNorm(2 * d_model),
-            nn.Linear(2 * d_model, d_model),
+            nn.LayerNorm(head_input_dim),
+            nn.Linear(head_input_dim, d_model),
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(d_model, num_classes),
@@ -64,9 +71,31 @@ class CausalTransformerClassifier(nn.Module):
         # Gather final valid hidden state for each sequence.
         idx = (lengths.to(sequences.device) - 1).clamp(min=0, max=seq_len - 1)
         seq_repr = h[torch.arange(batch_size, device=sequences.device), idx]
-        flat_repr = self.flat_proj(flat_feat)
-        logits = self.head(torch.cat([seq_repr, flat_repr], dim=-1))
+        if self.include_flat_features:
+            flat_repr = self.flat_proj(flat_feat)
+            logits = self.head(torch.cat([seq_repr, flat_repr], dim=-1))
+        else:
+            logits = self.head(seq_repr)
         return logits
+
+
+class FocalLoss(nn.Module):
+    def __init__(self, gamma: float = 2.0, alpha=None):
+        super().__init__()
+        self.gamma = gamma
+        if alpha is not None:
+            self.alpha = torch.tensor(alpha, dtype=torch.float32)
+        else:
+            self.alpha = None
+
+    def forward(self, logits, targets):
+        ce = nn.functional.cross_entropy(logits, targets, reduction="none")
+        pt = torch.exp(-ce)
+        loss = (1.0 - pt) ** self.gamma * ce
+        if self.alpha is not None:
+            alpha = self.alpha.to(logits.device)
+            loss = alpha[targets] * loss
+        return loss.mean()
 
 
 def predict_transformer(model, dataset, batch_size: int = 256):
@@ -96,6 +125,10 @@ def train_transformer(
     num_layers: int = 2,
     dropout: float = 0.1,
     patience: int = 3,
+    loss_type: str = "ce",
+    focal_gamma: float = 2.0,
+    focal_alpha=None,
+    include_flat_features: bool = True,
 ):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CausalTransformerClassifier(
@@ -107,10 +140,16 @@ def train_transformer(
         dropout=dropout,
         max_seq_len=train_dataset.max_seq_len,
         num_classes=3,
+        include_flat_features=include_flat_features,
     ).to(device)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
-    criterion = nn.CrossEntropyLoss()
+    if loss_type == "ce":
+        criterion = nn.CrossEntropyLoss()
+    elif loss_type == "focal":
+        criterion = FocalLoss(gamma=focal_gamma, alpha=focal_alpha)
+    else:
+        raise ValueError(f"Unknown loss_type: {loss_type}. Expected 'ce' or 'focal'.")
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
@@ -174,7 +213,7 @@ def train_transformer(
         print(
             f"Epoch {epoch + 1}/{num_epochs} "
             f"train_loss={avg_train_loss:.4f} val_loss={avg_val_loss:.4f} "
-            f"val_macro_f1={val_macro_f1:.4f}"
+            f"val_macro_f1={val_macro_f1:.4f} loss={loss_type}"
         )
 
         if val_macro_f1 > best_val_f1:
