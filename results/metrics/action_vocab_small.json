@@ -1,0 +1,316 @@
+{
+  "num_phh_files": 10088,
+  "action_code_counts": {
+    "f": 48545,
+    "cc": 24913,
+    "cbr": 18743,
+    "sm": 3488,
+    "sd": 42,
+    "pb": 30
+  },
+  "known_label_counts": {
+    "Fold": 48545,
+    "Call": 24913,
+    "Raise": 18743
+  },
+  "unknown_code_counts": {
+    "sm": 3488,
+    "sd": 42,
+    "pb": 30
+  },
+  "unknown_examples": {
+    "sd": [
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p1 sd ????"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p2 sd ????"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p4 sd ??"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p1 sd ??"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p2 sd"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p4 sd ??"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p2 sd ??"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p4 sd"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p1 sd"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p4 sd AsQs"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p1 sd"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p4 sd Qh"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p1 sd"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p4 sd 6s"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/45.phh",
+        "action": "p2 sd JsJd"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/45.phh",
+        "action": "p5 sd 9h"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/46.phh",
+        "action": "p2 sd JcAs"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/46.phh",
+        "action": "p5 sd 3h"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/55.phh",
+        "action": "p1 sd QdJc"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/55.phh",
+        "action": "p2 sd KsKd4s"
+      }
+    ],
+    "sm": [
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p4 sm 2s4c6d9h"
+      },
+      {
+        "file": "data/raw/phh_sample/alice-carol-wikipedia.phh",
+        "action": "p2 sm 3s5d7c8h"
+      },
+      {
+        "file": "data/raw/phh_sample/antonius-blom-2009.phh",
+        "action": "p1 sm Ah3sKsKh"
+      },
+      {
+        "file": "data/raw/phh_sample/antonius-blom-2009.phh",
+        "action": "p2 sm 6d9s7d8h"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p1 sm 7h6c4c3d2c"
+      },
+      {
+        "file": "data/raw/phh_sample/arieh-yockey-2019.phh",
+        "action": "p4 sm 2h4d7c5c3c"
+      },
+      {
+        "file": "data/raw/phh_sample/dwan-ivey-2009.phh",
+        "action": "p1 sm Ac2d"
+      },
+      {
+        "file": "data/raw/phh_sample/dwan-ivey-2009.phh",
+        "action": "p3 sm 7h6h"
+      },
+      {
+        "file": "data/raw/phh_sample/phua-xuan-2019.phh",
+        "action": "p5 sm KhKs"
+      },
+      {
+        "file": "data/raw/phh_sample/phua-xuan-2019.phh",
+        "action": "p3 sm QhQd"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/11.phh",
+        "action": "p1 sm 4hAc"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/11.phh",
+        "action": "p2 sm"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/14.phh",
+        "action": "p4 sm 9sQs"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/14.phh",
+        "action": "p5 sm"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/18.phh",
+        "action": "p1 sm 7hKh"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/18.phh",
+        "action": "p2 sm"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/33.phh",
+        "action": "p2 sm Qs3s"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/33.phh",
+        "action": "p5 sm 9hAd"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/38.phh",
+        "action": "p2 sm 6cJc"
+      },
+      {
+        "file": "data/raw/phh_sample/pluribus/100/38.phh",
+        "action": "p5 sm"
+      }
+    ],
+    "pb": [
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/10.phh",
+        "action": "p2 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/11.phh",
+        "action": "p2 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/20.phh",
+        "action": "p1 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/21.phh",
+        "action": "p4 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/22.phh",
+        "action": "p3 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/23.phh",
+        "action": "p3 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/24.phh",
+        "action": "p1 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/25.phh",
+        "action": "p4 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/26.phh",
+        "action": "p1 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/48.phh",
+        "action": "p3 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/49.phh",
+        "action": "p4 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/5.phh",
+        "action": "p5 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/50.phh",
+        "action": "p3 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/51.phh",
+        "action": "p5 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/52.phh",
+        "action": "p4 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/53.phh",
+        "action": "p4 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/54.phh",
+        "action": "p5 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/6.phh",
+        "action": "p3 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/69.phh",
+        "action": "p1 pb"
+      },
+      {
+        "file": "data/raw/phh_sample/wsop/2023/43/5/7.phh",
+        "action": "p3 pb"
+      }
+    ]
+  },
+  "per_source_action_code_counts": {
+    "alice-carol-wikipedia.phh": {
+      "cc": 10,
+      "sd": 8,
+      "cbr": 4,
+      "f": 2,
+      "sm": 2
+    },
+    "antonius-blom-2009.phh": {
+      "cbr": 7,
+      "cc": 2,
+      "sm": 2
+    },
+    "arieh-yockey-2019.phh": {
+      "sd": 6,
+      "cbr": 5,
+      "cc": 4,
+      "f": 2,
+      "sm": 2
+    },
+    "dwan-ivey-2009.phh": {
+      "cbr": 6,
+      "cc": 3,
+      "sm": 2,
+      "f": 1
+    },
+    "phua-xuan-2019.phh": {
+      "f": 4,
+      "cc": 3,
+      "cbr": 2,
+      "sm": 2
+    },
+    "pluribus": {
+      "f": 48271,
+      "cc": 24613,
+      "cbr": 18472,
+      "sm": 3402
+    },
+    "wsop": {
+      "cc": 278,
+      "f": 265,
+      "cbr": 247,
+      "sm": 76,
+      "pb": 30,
+      "sd": 28
+    }
+  }
+}

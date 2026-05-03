@@ -1,6 +1,13 @@
-data/
+
+data/raw/
+data/processed/
+
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
 __pycache__/
-*.zip
 *.pyc
+
 .DS_Store
-.venv/
