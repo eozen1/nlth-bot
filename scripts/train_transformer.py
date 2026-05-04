@@ -2,9 +2,11 @@
 
 import argparse
 import json
+import random
 import sys
 from pathlib import Path
 
+import numpy as np
 import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support, recall_score
 
@@ -50,6 +52,14 @@ def dataset_labels(dataset):
     return [sample[3] for sample in dataset.samples]
 
 
+def set_global_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--train_path", type=str, default=None)
@@ -78,10 +88,13 @@ def main():
         action="store_true",
         help="Ignore flat context features and use only action history sequence.",
     )
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--out_metrics", type=str, default="results/metrics/h1_transformer_vs_lstm.json")
     parser.add_argument("--out_history", type=str, default="results/metrics/h1_transformer_training_history.json")
     parser.add_argument("--out_ckpt", type=str, default="checkpoints/h1_transformer.pt")
     args = parser.parse_args()
+
+    set_global_seed(args.seed)
 
     print("Loading processed datasets...")
     train_ds, val_ds, test_ds = load_datasets(
@@ -109,13 +122,14 @@ def main():
         focal_gamma=args.focal_gamma,
         focal_alpha=args.focal_alpha,
         include_flat_features=not args.history_only,
+        seed=args.seed,
     )
 
     y_pred_val_t = predict_transformer(transformer_model, val_ds, batch_size=args.batch_size)
     y_pred_test_t = predict_transformer(transformer_model, test_ds, batch_size=args.batch_size)
 
     print("\nTraining LSTM baseline...")
-    lstm_model = train_lstm(train_ds)
+    lstm_model = train_lstm(train_ds, seed=args.seed)
     y_pred_val_l = predict_lstm(lstm_model, val_ds)
     y_pred_test_l = predict_lstm(lstm_model, test_ds)
 
@@ -134,6 +148,7 @@ def main():
             "focal_gamma": args.focal_gamma,
             "focal_alpha": args.focal_alpha,
             "history_only": args.history_only,
+            "seed": args.seed,
         },
         "Transformer": {
             "val": compute_metrics(y_val, y_pred_val_t),

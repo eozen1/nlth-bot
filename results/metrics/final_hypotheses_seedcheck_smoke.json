@@ -1,0 +1,273 @@
+{
+  "config": {
+    "epochs": 1,
+    "lstm_epochs": 1,
+    "batch_size": 512,
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "d_model": 128,
+    "num_heads": 4,
+    "num_layers": 2,
+    "dropout": 0.1,
+    "patience": 1,
+    "focal_gamma": 2.0,
+    "focal_alpha": null,
+    "seed": 42
+  },
+  "experiments": {
+    "lstm_baseline": {
+      "val": {
+        "accuracy": 0.6880997022168303,
+        "macro_f1": 0.5315911836277248,
+        "fold_recall": 0.9009860312243221,
+        "raise_recall": 0.07007786429365963,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7442728661123367,
+            "recall": 0.9009860312243221,
+            "f1": 0.8151658767772512,
+            "support": 4868
+          },
+          "Call": {
+            "precision": 0.6152475952974706,
+            "recall": 0.7192836318200749,
+            "f1": 0.6632104454685099,
+            "support": 2401
+          },
+          "Raise": {
+            "precision": 0.34332425068119893,
+            "recall": 0.07007786429365963,
+            "f1": 0.11639722863741339,
+            "support": 1798
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.6885103612889226,
+        "macro_f1": 0.5373651627232845,
+        "fold_recall": 0.9029804727646454,
+        "raise_recall": 0.07729468599033816,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7410593792172739,
+            "recall": 0.9029804727646454,
+            "f1": 0.8140461410173261,
+            "support": 4865
+          },
+          "Call": {
+            "precision": 0.6199451679232351,
+            "recall": 0.7267979108075532,
+            "f1": 0.669132605881265,
+            "support": 2489
+          },
+          "Raise": {
+            "precision": 0.3881401617250674,
+            "recall": 0.07729468599033816,
+            "f1": 0.12891674127126232,
+            "support": 1863
+          }
+        }
+      }
+    },
+    "transformer_ce_full_context": {
+      "val": {
+        "accuracy": 0.6743134443586632,
+        "macro_f1": 0.5283721153416622,
+        "fold_recall": 0.849835661462613,
+        "raise_recall": 0.07730812013348165,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7646950092421442,
+            "recall": 0.849835661462613,
+            "f1": 0.8050204319906596,
+            "support": 4868
+          },
+          "Call": {
+            "precision": 0.5758145363408521,
+            "recall": 0.7655143690129113,
+            "f1": 0.6572501340961917,
+            "support": 2401
+          },
+          "Raise": {
+            "precision": 0.2989247311827957,
+            "recall": 0.07730812013348165,
+            "f1": 0.12284577993813522,
+            "support": 1798
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.6798307475317349,
+        "macro_f1": 0.5368419638630192,
+        "fold_recall": 0.8522096608427544,
+        "raise_recall": 0.08105206655931294,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7622724765581909,
+            "recall": 0.8522096608427544,
+            "f1": 0.8047360248447205,
+            "support": 4865
+          },
+          "Call": {
+            "precision": 0.5863609291244789,
+            "recall": 0.791080755323423,
+            "f1": 0.6735077817684283,
+            "support": 2489
+          },
+          "Raise": {
+            "precision": 0.3595238095238095,
+            "recall": 0.08105206655931294,
+            "f1": 0.1322820849759089,
+            "support": 1863
+          }
+        }
+      },
+      "training": {
+        "best_val_macro_f1": 0.5283721153416622,
+        "best_val_loss": 0.69351108206643,
+        "best_epoch": 1
+      },
+      "loss_type": "ce",
+      "history_only": false
+    },
+    "transformer_focal_full_context": {
+      "val": {
+        "accuracy": 0.6742031542957979,
+        "macro_f1": 0.5345814033402942,
+        "fold_recall": 0.8829087921117502,
+        "raise_recall": 0.10789766407119021,
+        "per_class": {
+          "Fold": {
+            "precision": 0.750480181595949,
+            "recall": 0.8829087921117502,
+            "f1": 0.8113260972156677,
+            "support": 4868
+          },
+          "Call": {
+            "precision": 0.5916058394160584,
+            "recall": 0.6751353602665556,
+            "f1": 0.6306166115541724,
+            "support": 2401
+          },
+          "Raise": {
+            "precision": 0.3233333333333333,
+            "recall": 0.10789766407119021,
+            "f1": 0.16180150125104253,
+            "support": 1798
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.6780948247802973,
+        "macro_f1": 0.5437916479224718,
+        "fold_recall": 0.8820143884892087,
+        "raise_recall": 0.11379495437466453,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7463906766394155,
+            "recall": 0.8820143884892087,
+            "f1": 0.8085547390239307,
+            "support": 4865
+          },
+          "Call": {
+            "precision": 0.6026215936529837,
+            "recall": 0.7018883085576537,
+            "f1": 0.6484780994803266,
+            "support": 2489
+          },
+          "Raise": {
+            "precision": 0.37258347978910367,
+            "recall": 0.11379495437466453,
+            "f1": 0.17434210526315788,
+            "support": 1863
+          }
+        }
+      },
+      "training": {
+        "best_val_macro_f1": 0.5345814033402942,
+        "best_val_loss": 0.24792400830321842,
+        "best_epoch": 1
+      },
+      "loss_type": "focal",
+      "history_only": false
+    },
+    "transformer_ce_history_only": {
+      "val": {
+        "accuracy": 0.691628984228521,
+        "macro_f1": 0.5046198829857051,
+        "fold_recall": 0.864215283483977,
+        "raise_recall": 0.006674082313681869,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7693855157278713,
+            "recall": 0.864215283483977,
+            "f1": 0.8140479876160991,
+            "support": 4868
+          },
+          "Call": {
+            "precision": 0.5738255033557047,
+            "recall": 0.8546438983756768,
+            "f1": 0.6866320896770955,
+            "support": 2401
+          },
+          "Raise": {
+            "precision": 0.5217391304347826,
+            "recall": 0.006674082313681869,
+            "f1": 0.013179571663920923,
+            "support": 1798
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.688293370944993,
+        "macro_f1": 0.5045677259602919,
+        "fold_recall": 0.8672147995889004,
+        "raise_recall": 0.008051529790660225,
+        "per_class": {
+          "Fold": {
+            "precision": 0.7641731570367687,
+            "recall": 0.8672147995889004,
+            "f1": 0.8124398228384364,
+            "support": 4865
+          },
+          "Call": {
+            "precision": 0.5752453653217012,
+            "recall": 0.8477300120530333,
+            "f1": 0.685398733149261,
+            "support": 2489
+          },
+          "Raise": {
+            "precision": 0.5357142857142857,
+            "recall": 0.008051529790660225,
+            "f1": 0.015864621893178214,
+            "support": 1863
+          }
+        }
+      },
+      "training": {
+        "best_val_macro_f1": 0.5046198829857051,
+        "best_val_loss": 0.6436875694327884,
+        "best_epoch": 1
+      },
+      "loss_type": "ce",
+      "history_only": true
+    }
+  },
+  "hypotheses": {
+    "H1": {
+      "statement": "Transformer Macro F1 >= 10% relative gain over LSTM",
+      "relative_macro_f1_gain_val": -0.00605553362283937,
+      "supported": false
+    },
+    "H2": {
+      "statement": "Focal Loss increases Raise recall over CE",
+      "raise_recall_gain_val": 0.03058954393770856,
+      "supported": true
+    },
+    "H3": {
+      "statement": "Adding context features lowers validation loss vs history-only",
+      "val_loss_delta_context_minus_history_only": 0.0498235126336416,
+      "supported": false
+    }
+  }
+}

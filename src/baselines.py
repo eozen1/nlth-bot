@@ -1,5 +1,6 @@
 """Three baseline models: majority class, logistic regression, LSTM."""
 
+import random
 import numpy as np
 import torch
 import torch.nn as nn
@@ -56,13 +57,26 @@ def train_lstm(
     batch_size: int = 64,
     lr: float = 1e-3,
     hidden_dim: int = 32,
+    seed: int | None = None,
 ) -> LSTMClassifier:
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = LSTMClassifier(input_dim=7, hidden_dim=hidden_dim, num_classes=3).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.CrossEntropyLoss()
 
-    loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    loader_kwargs = {"batch_size": batch_size, "shuffle": True}
+    if seed is not None:
+        generator = torch.Generator()
+        generator.manual_seed(seed)
+        loader_kwargs["generator"] = generator
+    loader = DataLoader(train_dataset, **loader_kwargs)
 
     model.train()
     for epoch in range(num_epochs):

@@ -1,6 +1,7 @@
 """Causal Transformer baseline for poker action prediction."""
 
 import copy
+import random
 
 import numpy as np
 import torch
@@ -129,7 +130,15 @@ def train_transformer(
     focal_gamma: float = 2.0,
     focal_alpha=None,
     include_flat_features: bool = True,
+    seed: int | None = None,
 ):
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CausalTransformerClassifier(
         seq_input_dim=7,
@@ -150,7 +159,12 @@ def train_transformer(
         criterion = FocalLoss(gamma=focal_gamma, alpha=focal_alpha)
     else:
         raise ValueError(f"Unknown loss_type: {loss_type}. Expected 'ce' or 'focal'.")
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    train_loader_kwargs = {"batch_size": batch_size, "shuffle": True}
+    if seed is not None:
+        generator = torch.Generator()
+        generator.manual_seed(seed)
+        train_loader_kwargs["generator"] = generator
+    train_loader = DataLoader(train_dataset, **train_loader_kwargs)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     best_state = copy.deepcopy(model.state_dict())

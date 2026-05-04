@@ -2,9 +2,12 @@
 
 import argparse
 import json
+import random
 import sys
 from pathlib import Path
 
+import numpy as np
+import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support, recall_score
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -61,6 +64,14 @@ def summarize_history(history):
     }
 
 
+def set_global_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
 def train_eval_transformer(train_ds, val_ds, test_ds, args, *, loss_type, history_only):
     model, history = train_transformer(
         train_dataset=train_ds,
@@ -78,6 +89,7 @@ def train_eval_transformer(train_ds, val_ds, test_ds, args, *, loss_type, histor
         focal_gamma=args.focal_gamma,
         focal_alpha=args.focal_alpha,
         include_flat_features=not history_only,
+        seed=args.seed,
     )
     y_val = dataset_labels(val_ds)
     y_test = dataset_labels(test_ds)
@@ -115,8 +127,11 @@ def main():
         metavar=("ALPHA_FOLD", "ALPHA_CALL", "ALPHA_RAISE"),
     )
     parser.add_argument("--lstm_epochs", type=int, default=5)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--out", type=str, default="results/metrics/final_hypotheses_results.json")
     args = parser.parse_args()
+
+    set_global_seed(args.seed)
 
     print("Loading processed datasets...")
     train_ds, val_ds, test_ds = load_datasets(
@@ -128,7 +143,7 @@ def main():
     y_test = dataset_labels(test_ds)
 
     print("\nTraining LSTM baseline (shared for H1)...")
-    lstm = train_lstm(train_ds, num_epochs=args.lstm_epochs)
+    lstm = train_lstm(train_ds, num_epochs=args.lstm_epochs, seed=args.seed)
     lstm_results = {
         "val": compute_metrics(y_val, predict_lstm(lstm, val_ds)),
         "test": compute_metrics(y_test, predict_lstm(lstm, test_ds)),
@@ -185,6 +200,7 @@ def main():
             "patience": args.patience,
             "focal_gamma": args.focal_gamma,
             "focal_alpha": args.focal_alpha,
+            "seed": args.seed,
         },
         "experiments": {
             "lstm_baseline": lstm_results,
