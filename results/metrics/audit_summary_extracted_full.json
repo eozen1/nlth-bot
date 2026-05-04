@@ -1,0 +1,83 @@
+{
+  "num_phh_files": 27080,
+  "num_malformed_files": 0,
+  "total_decision_points": 242736,
+  "class_counts": {
+    "Fold": 120682,
+    "Call": 66732,
+    "Other": 11225,
+    "Raise": 44097
+  },
+  "class_percentages": {
+    "Fold": 0.497174,
+    "Call": 0.274916,
+    "Other": 0.046244,
+    "Raise": 0.181667
+  },
+  "decisions_per_hand": {
+    "mean": 8.964,
+    "p50": 8,
+    "p90": 15,
+    "p95": 17,
+    "p99": 21,
+    "max": 33
+  },
+  "history_length_before_decision": {
+    "mean": 14.69,
+    "p50": 14,
+    "p90": 24,
+    "p95": 26,
+    "p99": 31,
+    "max": 44
+  },
+  "per_top_directory_class_counts": {
+    "alice-carol-wikipedia.phh": {
+      "Fold": 2,
+      "Call": 10,
+      "Other": 10,
+      "Raise": 4
+    },
+    "antonius-blom-2009.phh": {
+      "Raise": 7,
+      "Call": 2,
+      "Other": 2
+    },
+    "arieh-yockey-2019.phh": {
+      "Fold": 2,
+      "Raise": 5,
+      "Call": 4,
+      "Other": 8
+    },
+    "dwan-ivey-2009.phh": {
+      "Raise": 6,
+      "Fold": 1,
+      "Call": 3,
+      "Other": 2
+    },
+    "handhq": {
+      "Fold": 72137,
+      "Call": 41819,
+      "Other": 7665,
+      "Raise": 25354
+    },
+    "phua-xuan-2019.phh": {
+      "Call": 3,
+      "Raise": 2,
+      "Fold": 4,
+      "Other": 2
+    },
+    "pluribus": {
+      "Fold": 48271,
+      "Raise": 18472,
+      "Call": 24613,
+      "Other": 3402
+    },
+    "wsop": {
+      "Fold": 265,
+      "Raise": 247,
+      "Call": 278,
+      "Other": 134
+    }
+  },
+  "malformed_examples": []
+}
