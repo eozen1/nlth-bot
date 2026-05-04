@@ -13,26 +13,53 @@ KNOWN_ACTIONS = {
 }
 
 
+def collect_hand_files(data_dir: Path, extensions):
+    files = []
+    for ext in extensions:
+        files.extend(data_dir.rglob(f"*{ext}"))
+    return sorted(set(files))
+
+
 def safe_parse_phh(path: Path):
     text = path.read_text(errors="ignore")
     text = re.sub(r"\btrue\b", "True", text)
     text = re.sub(r"\bfalse\b", "False", text)
     text = re.sub(r"\bnull\b", "None", text)
 
-    tree = ast.parse(text)
     out = {}
+    try:
+        tree = ast.parse(text)
+        nodes = tree.body
+    except SyntaxError:
+        nodes = []
 
-    for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
-            name = node.targets[0].id
-            try:
-                out[name] = ast.literal_eval(node.value)
-            except Exception:
-                pass
+    if nodes:
+        for node in nodes:
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+            ):
+                name = node.targets[0].id
+                try:
+                    out[name] = ast.literal_eval(node.value)
+                except Exception:
+                    pass
+        return out
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key.isidentifier():
+            continue
+        try:
+            out[key] = ast.literal_eval(value)
+        except Exception:
+            continue
 
     return out
 
@@ -43,10 +70,17 @@ def main():
     parser.add_argument(
         "--out", type=str, default="results/metrics/action_vocab_small.json"
     )
+    parser.add_argument(
+        "--extensions",
+        type=str,
+        default=".phh,.phhs",
+        help="Comma-separated hand-history extensions to include.",
+    )
     args = parser.parse_args()
 
     data_dir = Path(args.data_dir)
-    files = sorted(data_dir.rglob("*.phh"))
+    extensions = [ext.strip() for ext in args.extensions.split(",") if ext.strip()]
+    files = collect_hand_files(data_dir, extensions)
 
     action_code_counts = Counter()
     known_label_counts = Counter()

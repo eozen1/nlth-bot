@@ -33,19 +33,42 @@ def safe_parse_phh(path: Path):
     text = re.sub(r"\bfalse\b", "False", text)
     text = re.sub(r"\bnull\b", "None", text)
 
-    tree = ast.parse(text)
     out = {}
-    for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
-            key = node.targets[0].id
-            try:
-                out[key] = ast.literal_eval(node.value)
-            except Exception:
-                pass
+    try:
+        tree = ast.parse(text)
+        nodes = tree.body
+    except SyntaxError:
+        nodes = []
+
+    if nodes:
+        for node in nodes:
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+            ):
+                key = node.targets[0].id
+                try:
+                    out[key] = ast.literal_eval(node.value)
+                except Exception:
+                    pass
+        return out
+
+    # Fallback for PHH variants containing non-literal metadata lines (e.g., time=00:01:12).
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key.isidentifier():
+            continue
+        try:
+            out[key] = ast.literal_eval(value)
+        except Exception:
+            continue
+
     return out
 
 
@@ -61,6 +84,14 @@ def compute_split_boundaries(n, train_ratio, val_ratio):
     n_val = int(n * val_ratio)
     n_test = n - n_train - n_val
     return n_train, n_val, n_test
+
+
+def collect_hand_files(data_dir: Path, extensions):
+    files = []
+    for ext in extensions:
+        files.extend(data_dir.rglob(f"*{ext}"))
+    # dedupe while preserving deterministic ordering
+    return sorted(set(files))
 
 
 def build_examples_from_hand(path: Path, data_dir: Path, max_history_len: int):
@@ -140,7 +171,8 @@ def build_examples_from_hand(path: Path, data_dir: Path, max_history_len: int):
         active_norm = num_active / max(num_players, 1)
         stack_bb = stack_remaining / float(big_blind)
         to_call_bb = to_call / float(big_blind)
-        pot_odds = (to_call / (pot_with_bets + to_call)) if to_call > 0 else 0.0
+        pot_odds_denom = pot_with_bets + to_call
+        pot_odds = (to_call / pot_odds_denom) if (to_call > 0 and pot_odds_denom > 0) else 0.0
         spr = (stack_remaining / pot_with_bets) if pot_with_bets > 0 else None
 
         label_name = LABEL_CODE_TO_NAME.get(code)
@@ -213,6 +245,12 @@ def main():
     parser.add_argument("--train_ratio", type=float, default=0.8)
     parser.add_argument("--val_ratio", type=float, default=0.1)
     parser.add_argument("--max_history_len", type=int, default=64)
+    parser.add_argument(
+        "--extensions",
+        type=str,
+        default=".phh,.phhs",
+        help="Comma-separated hand-history extensions to include.",
+    )
     args = parser.parse_args()
 
     if args.train_ratio <= 0 or args.val_ratio <= 0 or (args.train_ratio + args.val_ratio) >= 1:
@@ -222,9 +260,12 @@ def main():
     out_dir = Path(args.out_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    files = sorted(data_dir.rglob("*.phh"))
+    extensions = [ext.strip() for ext in args.extensions.split(",") if ext.strip()]
+    files = collect_hand_files(data_dir, extensions)
     if not files:
-        raise FileNotFoundError(f"No .phh files found in {data_dir}")
+        raise FileNotFoundError(
+            f"No hand files found in {data_dir} with extensions: {extensions}"
+        )
 
     rng = random.Random(args.seed)
     rng.shuffle(files)

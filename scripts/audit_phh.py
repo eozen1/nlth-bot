@@ -14,6 +14,13 @@ ACTION_MAP = {
 }
 
 
+def collect_hand_files(data_dir: Path, extensions):
+    files = []
+    for ext in extensions:
+        files.extend(data_dir.rglob(f"*{ext}"))
+    return sorted(set(files))
+
+
 def safe_parse_phh(path: Path):
     """
     Parse PHH-like assignment files without using exec().
@@ -27,20 +34,37 @@ def safe_parse_phh(path: Path):
     out = {}
     try:
         tree = ast.parse(text)
-    except SyntaxError as e:
-        raise ValueError(f"Syntax error in {path}: {e}")
+        nodes = tree.body
+    except SyntaxError:
+        nodes = []
 
-    for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
-            name = node.targets[0].id
-            try:
-                out[name] = ast.literal_eval(node.value)
-            except Exception:
-                pass
+    if nodes:
+        for node in nodes:
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+            ):
+                name = node.targets[0].id
+                try:
+                    out[name] = ast.literal_eval(node.value)
+                except Exception:
+                    pass
+        return out
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key.isidentifier():
+            continue
+        try:
+            out[key] = ast.literal_eval(value)
+        except Exception:
+            continue
 
     return out
 
@@ -124,12 +148,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, required=True)
     parser.add_argument("--out", type=str, default="audit_summary.json")
+    parser.add_argument(
+        "--extensions",
+        type=str,
+        default=".phh,.phhs",
+        help="Comma-separated hand-history extensions to include.",
+    )
     args = parser.parse_args()
 
     data_dir = Path(args.data_dir).expanduser()
-    files = sorted(data_dir.rglob("*.phh"))
+    extensions = [ext.strip() for ext in args.extensions.split(",") if ext.strip()]
+    files = collect_hand_files(data_dir, extensions)
 
-    print(f"Found {len(files):,} .phh files under {data_dir}")
+    print(f"Found {len(files):,} hand files under {data_dir} with {extensions}")
 
     global_labels = Counter()
     per_top_dir = defaultdict(Counter)
