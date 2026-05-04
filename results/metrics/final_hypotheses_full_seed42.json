@@ -1,0 +1,273 @@
+{
+    "config": {
+      "epochs": 10,
+      "lstm_epochs": 5,
+      "batch_size": 256,
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "d_model": 128,
+      "num_heads": 4,
+      "num_layers": 2,
+      "dropout": 0.1,
+      "patience": 3,
+      "focal_gamma": 2.0,
+      "focal_alpha": null,
+      "seed": 42
+    },
+    "experiments": {
+      "lstm_baseline": {
+        "val": {
+          "accuracy": 0.6919379979217181,
+          "macro_f1": 0.568873140072976,
+          "fold_recall": 0.932220367278798,
+          "raise_recall": 0.17506811989100818,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7163106920659355,
+              "recall": 0.932220367278798,
+              "f1": 0.810126582278481,
+              "support": 11980
+            },
+            "Call": {
+              "precision": 0.6646933070218713,
+              "recall": 0.6022050059594756,
+              "f1": 0.6319080747283671,
+              "support": 6712
+            },
+            "Raise": {
+              "precision": 0.5414325842696629,
+              "recall": 0.17506811989100818,
+              "f1": 0.26458476321207963,
+              "support": 4404
+            }
+          }
+        },
+        "test": {
+          "accuracy": 0.6886574074074074,
+          "macro_f1": 0.5653424085522293,
+          "fold_recall": 0.9284943111037289,
+          "raise_recall": 0.17142210144927536,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7136473892506064,
+              "recall": 0.9284943111037289,
+              "f1": 0.8070162774750063,
+              "support": 12041
+            },
+            "Call": {
+              "precision": 0.6607971826476708,
+              "recall": 0.6007859118032309,
+              "f1": 0.6293642323524927,
+              "support": 6871
+            },
+            "Raise": {
+              "precision": 0.5349823321554771,
+              "recall": 0.17142210144927536,
+              "f1": 0.2596467158291888,
+              "support": 4416
+            }
+          }
+        }
+      },
+      "transformer_ce_full_context": {
+        "val": {
+          "accuracy": 0.6779528922757188,
+          "macro_f1": 0.5438929535707216,
+          "fold_recall": 0.9429883138564273,
+          "raise_recall": 0.14577656675749318,
+          "per_class": {
+            "Fold": {
+              "precision": 0.6939189189189189,
+              "recall": 0.9429883138564273,
+              "f1": 0.7995046001415428,
+              "support": 11980
+            },
+            "Call": {
+              "precision": 0.6577644145737531,
+              "recall": 0.5540822407628129,
+              "f1": 0.601487950832929,
+              "support": 6712
+            },
+            "Raise": {
+              "precision": 0.5524956970740104,
+              "recall": 0.14577656675749318,
+              "f1": 0.23068630973769313,
+              "support": 4404
+            }
+          }
+        },
+        "test": {
+          "accuracy": 0.6789694787379973,
+          "macro_f1": 0.5448517342761479,
+          "fold_recall": 0.9398721036458766,
+          "raise_recall": 0.14221014492753623,
+          "per_class": {
+            "Fold": {
+              "precision": 0.6957029569066208,
+              "recall": 0.9398721036458766,
+              "f1": 0.7995619612830296,
+              "support": 12041
+            },
+            "Call": {
+              "precision": 0.6594411515664691,
+              "recall": 0.5667297336632222,
+              "f1": 0.6095804633688165,
+              "support": 6871
+            },
+            "Raise": {
+              "precision": 0.5432525951557093,
+              "recall": 0.14221014492753623,
+              "f1": 0.22541277817659727,
+              "support": 4416
+            }
+          }
+        },
+        "training": {
+          "best_val_macro_f1": 0.5438929535707216,
+          "best_val_loss": 0.7180001414739169,
+          "best_epoch": 5
+        },
+        "loss_type": "ce",
+        "history_only": false
+      },
+      "transformer_focal_full_context": {
+        "val": {
+          "accuracy": 0.661802909594735,
+          "macro_f1": 0.5654722671541167,
+          "fold_recall": 0.8984974958263773,
+          "raise_recall": 0.2865576748410536,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7030239696949905,
+              "recall": 0.8984974958263773,
+              "f1": 0.7888314829064527,
+              "support": 11980
+            },
+            "Call": {
+              "precision": 0.6557344064386318,
+              "recall": 0.4855482717520858,
+              "f1": 0.5579524054100325,
+              "support": 6712
+            },
+            "Raise": {
+              "precision": 0.4483126110124334,
+              "recall": 0.2865576748410536,
+              "f1": 0.3496329131458651,
+              "support": 4404
+            }
+          }
+        },
+        "test": {
+          "accuracy": 0.6620370370370371,
+          "macro_f1": 0.5675475997506246,
+          "fold_recall": 0.8952744788638818,
+          "raise_recall": 0.28940217391304346,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7039310434896173,
+              "recall": 0.8952744788638818,
+              "f1": 0.7881557302138549,
+              "support": 12041
+            },
+            "Call": {
+              "precision": 0.6542995169082125,
+              "recall": 0.4927958084703828,
+              "f1": 0.5621783164535945,
+              "support": 6871
+            },
+            "Raise": {
+              "precision": 0.450158506516379,
+              "recall": 0.28940217391304346,
+              "f1": 0.3523087525844245,
+              "support": 4416
+            }
+          }
+        },
+        "training": {
+          "best_val_macro_f1": 0.5654722671541167,
+          "best_val_loss": 0.2736121543816158,
+          "best_epoch": 4
+        },
+        "loss_type": "focal",
+        "history_only": false
+      },
+      "transformer_ce_history_only": {
+        "val": {
+          "accuracy": 0.6931503290613094,
+          "macro_f1": 0.5729059461369032,
+          "fold_recall": 0.9240400667779632,
+          "raise_recall": 0.18051771117166213,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7214076246334311,
+              "recall": 0.9240400667779632,
+              "f1": 0.8102470265324794,
+              "support": 11980
+            },
+            "Call": {
+              "precision": 0.6559037670148782,
+              "recall": 0.6174016686531585,
+              "f1": 0.6360706062931696,
+              "support": 6712
+            },
+            "Raise": {
+              "precision": 0.5547801814375436,
+              "recall": 0.18051771117166213,
+              "f1": 0.27240020558506084,
+              "support": 4404
+            }
+          }
+        },
+        "test": {
+          "accuracy": 0.6916580932784636,
+          "macro_f1": 0.5711960487808221,
+          "fold_recall": 0.9259197741051408,
+          "raise_recall": 0.17980072463768115,
+          "per_class": {
+            "Fold": {
+              "precision": 0.7182245699929137,
+              "recall": 0.9259197741051408,
+              "f1": 0.8089537077347264,
+              "support": 12041
+            },
+            "Call": {
+              "precision": 0.6606776989755713,
+              "recall": 0.6101004220637462,
+              "f1": 0.6343825665859564,
+              "support": 6871
+            },
+            "Raise": {
+              "precision": 0.5438356164383562,
+              "recall": 0.17980072463768115,
+              "f1": 0.2702518720217835,
+              "support": 4416
+            }
+          }
+        },
+        "training": {
+          "best_val_macro_f1": 0.5729059461369032,
+          "best_val_loss": 0.691187614267999,
+          "best_epoch": 4
+        },
+        "loss_type": "ce",
+        "history_only": true
+      }
+    },
+    "hypotheses": {
+      "H1": {
+        "statement": "Transformer Macro F1 >= 10% relative gain over LSTM",
+        "relative_macro_f1_gain_val": -0.04391169971401675,
+        "supported": false
+      },
+      "H2": {
+        "statement": "Focal Loss increases Raise recall over CE",
+        "raise_recall_gain_val": 0.14078110808356042,
+        "supported": true
+      },
+      "H3": {
+        "statement": "Adding context features lowers validation loss vs history-only",
+        "val_loss_delta_context_minus_history_only": 0.02681252720591787,
+        "supported": false
+      }
+    }
+  }
